@@ -3,31 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Arcade - Jeux interessants</title>
+    <title>Square - Jeu de Points Colorés</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366F1;
-            --primary-dark: #4F46E5;
-            --secondary: #EC4899;
-            --accent: #F59E0B;
-            --success: #10B981;
-            --danger: #EF4444;
-            --warning: #F59E0B;
-            --dark: #0F172A;
-            --dark-2: #1E293B;
-            --dark-3: #334155;
-            --light: #F8FAFC;
-            --light-2: #E2E8F0;
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #FFD23F;
+            --success: #06D6A0;
+            --danger: #EF476F;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --grid-bg: #FFFFFF;
             --shadow: rgba(0, 0, 0, 0.1);
-            --shadow-lg: rgba(0, 0, 0, 0.2);
-            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
 
         * {
@@ -37,8 +28,8 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--gradient-1);
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -46,597 +37,484 @@
         .app-container {
             min-height: 100vh;
             padding: 1rem;
-            position: relative;
         }
 
-        /* Animated Background */
-        .bg-decoration {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .bg-circle:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: -5%;
-            animation-delay: 0s;
-        }
-
-        .bg-circle:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            right: -3%;
-            animation-delay: 3s;
-        }
-
-        .bg-circle:nth-child(3) {
-            width: 400px;
-            height: 400px;
-            bottom: -10%;
-            left: 50%;
-            animation-delay: 6s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) translateX(0) scale(1);
-            }
-            33% {
-                transform: translateY(-30px) translateX(30px) scale(1.1);
-            }
-            66% {
-                transform: translateY(20px) translateX(-20px) scale(0.9);
-            }
-        }
-
-        /* Language Toggle */
-        .language-toggle {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            padding: 0.4rem;
-            border-radius: 50px;
-            display: flex;
-            gap: 0.3rem;
-            box-shadow: 0 8px 32px var(--shadow-lg);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .lang-button {
-            padding: 0.5rem 1.2rem;
-            border: none;
-            background: transparent;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: 0.5px;
-        }
-
-        .lang-button.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .lang-button:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Header */
+        /* Header Styles */
         .header {
             text-align: center;
-            padding: 3rem 1rem 2rem;
-            position: relative;
-            z-index: 1;
+            padding: 2rem 1rem;
             animation: fadeInDown 0.8s ease-out;
         }
 
         .logo {
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 900;
-            color: white;
-            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
             margin-bottom: 0.5rem;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            line-height: 1;
         }
 
         .tagline {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            font-weight: 400;
-            letter-spacing: 0.5px;
+            color: var(--light);
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-weight: 300;
+            opacity: 0.9;
         }
 
-        /* Game Menu */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .game-card {
+        .language-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
             background: rgba(255, 255, 255, 0.95);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-button {
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .lang-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .lang-button:hover:not(.active) {
+            background: #F0F0F0;
+        }
+
+        /* Setup Screen */
+        .setup-screen {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             border-radius: 24px;
-            padding: 2.5rem 2rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: clamp(1.5rem, 4vw, 3rem);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
         }
 
-        .game-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: var(--gradient-1);
-            transform: scaleX(0);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .game-card:nth-child(2)::before { background: var(--gradient-2); }
-        .game-card:nth-child(3)::before { background: var(--gradient-3); }
-        .game-card:nth-child(4)::before { background: var(--gradient-4); }
-        .game-card:nth-child(5)::before { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .game-card:nth-child(6)::before { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
-
-        .game-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        }
-
-        .game-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .game-icon-wrapper {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: var(--gradient-1);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .game-card:nth-child(2) .game-icon-wrapper { background: var(--gradient-2); box-shadow: 0 8px 24px rgba(236, 72, 153, 0.3); }
-        .game-card:nth-child(3) .game-icon-wrapper { background: var(--gradient-3); box-shadow: 0 8px 24px rgba(79, 172, 254, 0.3); }
-        .game-card:nth-child(4) .game-icon-wrapper { background: var(--gradient-4); box-shadow: 0 8px 24px rgba(67, 233, 123, 0.3); }
-        .game-card:nth-child(5) .game-icon-wrapper { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); box-shadow: 0 8px 24px rgba(250, 112, 154, 0.3); }
-        .game-card:nth-child(6) .game-icon-wrapper { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); box-shadow: 0 8px 24px rgba(48, 207, 208, 0.3); }
-
-        .game-card:hover .game-icon-wrapper {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .game-icon {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-        }
-
-        .game-card-title {
-            font-size: 1.6rem;
+        .setup-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
             font-weight: 700;
             color: var(--dark);
-            margin-bottom: 0.75rem;
+            margin-bottom: 2rem;
             text-align: center;
         }
 
-        .game-card-desc {
-            font-size: 0.95rem;
-            color: var(--dark-3);
-            text-align: center;
-            line-height: 1.7;
+        .setup-section {
+            margin-bottom: 2rem;
         }
 
-        /* Back Button */
-        .back-button {
-            position: fixed;
-            top: 6rem;
-            left: 1.5rem;
-            z-index: 999;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
+        .section-label {
+            font-size: 1.1rem;
             font-weight: 600;
-            font-size: 0.95rem;
-            color: white;
-            box-shadow: 0 4px 12px var(--shadow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--secondary);
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .back-button:hover {
-            transform: translateX(-5px);
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Game Container */
-        .game-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            animation: fadeInUp 0.5s ease-out;
-            position: relative;
-            z-index: 1;
-        }
-
-        .game-header-info {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 24px var(--shadow);
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .game-stats {
-            display: flex;
-            gap: 2.5rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--dark-3);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .game-board-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 24px var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        /* Buttons */
-        .primary-button {
-            padding: 1rem 2rem;
+        .section-label::before {
+            content: '';
+            width: 4px;
+            height: 20px;
             background: var(--primary);
-            color: white;
-            border: none;
+            border-radius: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .option-button {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem 1.5rem;
+            border: 2px solid #E0E0E0;
+            background: white;
             border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
             font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            color: var(--dark);
         }
 
-        .primary-button:hover {
-            background: var(--primary-dark);
+        .option-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
-        .secondary-button {
-            padding: 1rem 2rem;
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .secondary-button:hover {
+        .option-button.selected {
+            border-color: var(--primary);
             background: var(--primary);
             color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Color Chain Game */
-        .chain-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 0.6rem;
-            margin: 0 auto;
-            max-width: 650px;
-        }
-
-        .chain-cell {
-            aspect-ratio: 1;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 3px solid transparent;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .chain-cell:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .chain-cell.selected {
-            border-color: white;
-            box-shadow: 0 0 0 4px var(--primary);
-        }
-
-        /* Pattern Master */
-        .pattern-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.2rem;
-            max-width: 450px;
-            margin: 2rem auto;
-        }
-
-        .pattern-button {
-            aspect-ratio: 1;
-            border: none;
-            border-radius: 16px;
-            font-size: 2.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 16px var(--shadow);
-            font-weight: 700;
-            color: white;
-        }
-
-        .pattern-button:active {
-            transform: scale(0.95);
-        }
-
-        .pattern-button.flash {
-            animation: flash 0.4s ease;
-        }
-
-        @keyframes flash {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.15); filter: brightness(1.4); }
-        }
-
-        .pattern-status {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 2rem;
-            min-height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 1rem;
-        }
-
-        /* Reflex Rush */
-        .reflex-arena {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            height: 450px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .reflex-target {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            animation: targetAppear 0.3s ease-out;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            border: 4px solid white;
-        }
-
-        .reflex-target:hover {
-            transform: scale(1.15);
-        }
-
-        @keyframes targetAppear {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Number Fusion */
-        .fusion-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            max-width: 500px;
-            margin: 2rem auto;
-            background: #bbada0;
-            padding: 1rem;
-            border-radius: 16px;
-        }
-
-        .fusion-cell {
-            aspect-ratio: 1;
-            background: rgba(238, 228, 218, 0.35);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #776e65;
-            font-family: 'JetBrains Mono', monospace;
-            transition: all 0.15s ease;
-        }
-
-        .fusion-cell.filled {
-            background: #eee4da;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .fusion-controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            max-width: 320px;
-            margin: 2rem auto;
-        }
-
-        .fusion-arrow {
-            padding: 1.5rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .fusion-arrow:hover {
-            background: var(--primary-dark);
             transform: scale(1.05);
         }
 
-        /* Block Stacker */
-        .stacker-container {
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        .stacker-grid {
+        .grid-size-options {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-            background: #2c3e50;
-            padding: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .player-setup {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .player-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
-        .stacker-cell {
-            aspect-ratio: 1;
-            background: #34495e;
-            border-radius: 4px;
-            transition: all 0.1s ease;
+        .player-info {
+            flex: 1;
+            min-width: 150px;
         }
 
-        .stacker-cell.filled {
+        .player-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--dark);
+            transform: scale(1.15);
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #FF8C61 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 107, 53, 0.5);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        /* Game Screen */
+        .game-screen {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .game-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .current-player {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+        }
+
+        .player-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid var(--dark);
+            animation: pulse 2s infinite;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .control-button.new-game {
             background: var(--success);
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+            color: white;
         }
 
-        .stacker-controls {
+        .control-button.forfeit {
+            background: var(--danger);
+            color: white;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .game-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .game-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scoreboard */
+        .scoreboard {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow);
+            min-width: 280px;
+        }
+
+        .scoreboard-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .score-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef3 100%);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .score-item.active {
+            background: linear-gradient(135deg, var(--accent) 0%, #FFE066 100%);
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255, 210, 63, 0.4);
+        }
+
+        .score-player {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--dark);
+        }
+
+        .score-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+            color: var(--primary);
+        }
+
+        /* Game Board */
+        .board-container {
+            background: var(--grid-bg);
+            padding: clamp(1rem, 3vw, 2rem);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--shadow);
+            overflow: auto;
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
+            align-items: center;
         }
 
-        /* Modal */
-        .modal-overlay {
+        .game-board {
+            display: inline-block;
+            position: relative;
+        }
+
+        .board-svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .dot-interactive {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dot-interactive:hover circle {
+            r: 8;
+            filter: brightness(1.2);
+        }
+
+        .square-rect {
+            animation: squareAppear 0.5s ease-out;
+        }
+
+        .square-number {
+            font-family: 'DM Mono', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            fill: white;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+        }
+
+        .grid-line {
+            stroke: #E0E0E0;
+            stroke-width: 1;
+            stroke-dasharray: 2,2;
+        }
+
+        /* Winner Screen */
+        .winner-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
-            animation: fadeIn 0.3s ease-out;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        .modal-content {
+        .winner-content {
             background: white;
-            padding: 3rem 2.5rem;
+            padding: 3rem;
             border-radius: 24px;
             text-align: center;
             max-width: 500px;
             width: 90%;
-            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: scaleIn 0.5s ease-out;
         }
 
-        .modal-title {
-            font-size: 2.8rem;
+        .winner-title {
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 900;
-            background: var(--gradient-1);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1rem;
         }
 
-        .modal-score {
-            font-size: 4rem;
+        .winner-name {
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--primary);
-            font-family: 'JetBrains Mono', monospace;
-            margin: 1.5rem 0;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .final-scores {
+            margin-bottom: 2rem;
+        }
+
+        .final-score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #F5F5F5;
+            border-radius: 8px;
         }
 
         /* Animations */
@@ -646,45 +524,97 @@
         }
 
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes squareAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .games-grid {
-                grid-template-columns: 1fr;
-                padding: 0 1rem;
+            .header {
+                padding: 1.5rem 1rem;
             }
 
-            .chain-grid {
-                grid-template-columns: repeat(6, 1fr);
+            .setup-screen {
+                padding: 1.5rem;
             }
 
-            .back-button {
-                top: 5rem;
-                left: 1rem;
-                padding: 0.6rem 1.2rem;
+            .option-button {
+                min-width: 100px;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .board-container {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-header {
+                padding: 1rem;
+            }
+
+            .current-player {
+                font-size: 1rem;
+            }
+
+            .control-button {
+                padding: 0.6rem 1rem;
                 font-size: 0.85rem;
             }
 
-            .reflex-arena {
-                height: 350px;
-            }
-
-            .language-toggle {
-                top: 1rem;
-                right: 1rem;
+            .scoreboard {
+                min-width: auto;
             }
         }
     </style>
@@ -693,55 +623,12 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
         // Translations
         const TRANSLATIONS = {
             fr: {
-                mainTitle: "ARCADE ULTIME",
-                mainTagline: "Collection de jeux",
-                backToMenu: "← Retour",
-                score: "Score",
-                level: "Niveau",
-                time: "Temps",
-                moves: "Coups",
-                lives: "Vies",
-                gameOver: "Partie Terminée",
-                finalScore: "Score Final",
-                playAgain: "Rejouer",
-                highScore: "Record",
-                start: "Démarrer",
-                
-                // Games
-                games: {
-                    colorChain: {
-                        title: "Chaîne Colorée",
-                        desc: "Connectez les couleurs identiques sans croiser les lignes pour créer de longues chaînes et marquer des points."
-                    },
-                    patternMaster: {
-                        title: "Maître des Motifs",
-                        desc: "Mémorisez et reproduisez des séquences de plus en plus complexes pour tester votre mémoire."
-                    },
-                    reflexRush: {
-                        title: "Réflexes Extrêmes",
-                        desc: "Cliquez sur les cibles avant qu'elles ne disparaissent. La vitesse augmente progressivement."
-                    },
-                    numberFusion: {
-                        title: "Fusion Numérique",
-                        desc: "Combinez les nombres identiques pour atteindre 2048. Un puzzle mathématique addictif."
-                    },
-                    blockStacker: {
-                        title: "Empileur Parfait",
-                        desc: "Empilez les blocs en mouvement au bon moment pour créer la tour la plus haute possible."
-                    },
-                    carre: {
-                        title: "Carré",
-                        desc: "Placez stratégiquement vos points colorés pour former des carrés et dominer vos adversaires."
-                    }
-                },
-
-                // Carré translations
-                title: "CARRÉ",
+                title: "SQUARE",
                 tagline: "Placer des points colorés et former des carrés",
                 setupTitle: "Configuration de la partie",
                 numPlayers: "Nombre de joueurs",
@@ -757,60 +644,20 @@
                 large: "Grand",
                 veryLarge: "Très grand",
                 playerColors: "Couleurs des joueurs",
-                startGame: "Commencer",
+                startGame: "Commencer la partie",
                 newGame: "Nouvelle partie",
-                forfeit: "Abandonner",
-                scoreboard: "Scores",
-                victory: "Victoire",
-                draw: "Égalité",
+                forfeit: "Déclarer forfait",
+                scoreboard: "Tableau des scores",
+                victory: "Victoire !",
+                draw: "Égalité !",
                 squares: "carrés",
                 square: "carré",
                 ai: "(IA)",
                 easy: "Facile",
+                medium: "Moyen",
                 hard: "Difficile"
             },
             en: {
-                mainTitle: "ULTIMATE ARCADE",
-                mainTagline: "Collection of addictive games",
-                backToMenu: "← Back",
-                score: "Score",
-                level: "Level",
-                time: "Time",
-                moves: "Moves",
-                lives: "Lives",
-                gameOver: "Game Over",
-                finalScore: "Final Score",
-                playAgain: "Play Again",
-                highScore: "High Score",
-                start: "Start",
-                
-                games: {
-                    colorChain: {
-                        title: "Color Chain",
-                        desc: "Connect identical colors without crossing lines to create long chains and score points."
-                    },
-                    patternMaster: {
-                        title: "Pattern Master",
-                        desc: "Memorize and reproduce increasingly complex sequences to test your memory."
-                    },
-                    reflexRush: {
-                        title: "Reflex Rush",
-                        desc: "Click targets before they disappear. Speed increases progressively."
-                    },
-                    numberFusion: {
-                        title: "Number Fusion",
-                        desc: "Combine identical numbers to reach 2048. An addictive mathematical puzzle."
-                    },
-                    blockStacker: {
-                        title: "Perfect Stacker",
-                        desc: "Stack moving blocks at the right time to create the tallest tower possible."
-                    },
-                    carre: {
-                        title: "Square",
-                        desc: "Strategically place your colored dots to form squares and dominate your opponents."
-                    }
-                },
-
                 title: "SQUARE",
                 tagline: "Place colored dots and form squares",
                 setupTitle: "Game Setup",
@@ -827,657 +674,41 @@
                 large: "Large",
                 veryLarge: "Very large",
                 playerColors: "Player colors",
-                startGame: "Start",
+                startGame: "Start Game",
                 newGame: "New Game",
                 forfeit: "Forfeit",
                 scoreboard: "Scoreboard",
-                victory: "Victory",
-                draw: "Draw",
+                victory: "Victory!",
+                draw: "Draw!",
                 squares: "squares",
                 square: "square",
                 ai: "(AI)",
                 easy: "Easy",
+                medium: "Medium",
                 hard: "Hard"
             }
         };
 
-        // Main App Component
-        const ArcadeApp = () => {
+        // Color options for players
+        const COLORS = {
+            blue: '#2196F3',
+            red: '#F44336',
+            yellow: '#FFC107',
+            green: '#4CAF50',
+            purple: '#9C27B0',
+            orange: '#FF9800'
+        };
+
+        // AI difficulty levels
+        const AI_DIFFICULTY = {
+            easy: { strategy: 'random' },
+            medium: { strategy: 'smart' },
+            hard: { strategy: 'aggressive' }
+        };
+
+        const CarreGame = () => {
             const [language, setLanguage] = useState('fr');
-            const [currentGame, setCurrentGame] = useState(null);
             const t = TRANSLATIONS[language];
-
-            const games = [
-                { id: 'carre', icon: 'SQ' },
-                { id: 'colorChain', icon: 'CC' },
-                { id: 'patternMaster', icon: 'PM' },
-                { id: 'reflexRush', icon: 'RR' },
-                { id: 'numberFusion', icon: '20' },
-                { id: 'blockStacker', icon: 'ST' }
-            ];
-
-            const BackgroundDecoration = () => (
-                <div className="bg-decoration">
-                    <div className="bg-circle"></div>
-                    <div className="bg-circle"></div>
-                    <div className="bg-circle"></div>
-                </div>
-            );
-
-            const renderGameMenu = () => (
-                <>
-                    <BackgroundDecoration />
-                    <div className="header">
-                        <h1 className="logo">{t.mainTitle}</h1>
-                        <p className="tagline">{t.mainTagline}</p>
-                    </div>
-                    <div className="games-grid">
-                        {games.map(game => (
-                            <div 
-                                key={game.id} 
-                                className="game-card"
-                                onClick={() => setCurrentGame(game.id)}
-                            >
-                                <div className="game-icon-wrapper">
-                                    <div className="game-icon">{game.icon}</div>
-                                </div>
-                                <h3 className="game-card-title">{t.games[game.id].title}</h3>
-                                <p className="game-card-desc">{t.games[game.id].desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </>
-            );
-
-            const renderCurrentGame = () => {
-                const gameComponents = {
-                    colorChain: <ColorChainGame t={t} />,
-                    patternMaster: <PatternMasterGame t={t} />,
-                    reflexRush: <ReflexRushGame t={t} />,
-                    numberFusion: <NumberFusionGame t={t} />,
-                    blockStacker: <BlockStackerGame t={t} />,
-                    carre: <CarreGame t={t} language={language} />
-                };
-
-                return (
-                    <>
-                        <BackgroundDecoration />
-                        <button className="back-button" onClick={() => setCurrentGame(null)}>
-                            {t.backToMenu}
-                        </button>
-                        {gameComponents[currentGame]}
-                    </>
-                );
-            };
-
-            return (
-                <div className="app-container">
-                    <div className="language-toggle">
-                        <button 
-                            className={`lang-button ${language === 'fr' ? 'active' : ''}`}
-                            onClick={() => setLanguage('fr')}
-                        >
-                            FR
-                        </button>
-                        <button 
-                            className={`lang-button ${language === 'en' ? 'active' : ''}`}
-                            onClick={() => setLanguage('en')}
-                        >
-                            EN
-                        </button>
-                    </div>
-                    
-                    {!currentGame ? renderGameMenu() : renderCurrentGame()}
-                </div>
-            );
-        };
-
-        // Color Chain Game
-        const ColorChainGame = ({ t }) => {
-            const [grid, setGrid] = useState([]);
-            const [score, setScore] = useState(0);
-            const [chains, setChains] = useState(0);
-            const [selectedCells, setSelectedCells] = useState([]);
-
-            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
-            const gridSize = 8;
-
-            useEffect(() => {
-                initializeGrid();
-            }, []);
-
-            const initializeGrid = () => {
-                const newGrid = [];
-                for (let i = 0; i < gridSize * gridSize; i++) {
-                    newGrid.push({
-                        id: i,
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        row: Math.floor(i / gridSize),
-                        col: i % gridSize
-                    });
-                }
-                setGrid(newGrid);
-                setScore(0);
-                setChains(0);
-                setSelectedCells([]);
-            };
-
-            const handleCellClick = (cell) => {
-                if (selectedCells.length === 0) {
-                    setSelectedCells([cell]);
-                } else {
-                    const lastCell = selectedCells[selectedCells.length - 1];
-                    
-                    if (cell.id === lastCell.id) return;
-                    
-                    if (cell.color === lastCell.color) {
-                        const isAdjacent = 
-                            Math.abs(cell.row - lastCell.row) <= 1 && 
-                            Math.abs(cell.col - lastCell.col) <= 1;
-                        
-                        if (isAdjacent && !selectedCells.find(c => c.id === cell.id)) {
-                            const newSelected = [...selectedCells, cell];
-                            setSelectedCells(newSelected);
-                            
-                            if (newSelected.length >= 3) {
-                                const points = newSelected.length * 10;
-                                setScore(score + points);
-                                setChains(chains + 1);
-                                
-                                setTimeout(() => {
-                                    clearChain(newSelected);
-                                }, 300);
-                            }
-                        }
-                    }
-                }
-            };
-
-            const clearChain = (chain) => {
-                const newGrid = grid.map(cell => {
-                    if (chain.find(c => c.id === cell.id)) {
-                        return {
-                            ...cell,
-                            color: colors[Math.floor(Math.random() * colors.length)]
-                        };
-                    }
-                    return cell;
-                });
-                setGrid(newGrid);
-                setSelectedCells([]);
-            };
-
-            return (
-                <div className="game-container">
-                    <div className="game-header-info">
-                        <div className="game-stats">
-                            <div className="stat-item">
-                                <div className="stat-label">{t.score}</div>
-                                <div className="stat-value">{score}</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-label">Chaînes</div>
-                                <div className="stat-value">{chains}</div>
-                            </div>
-                        </div>
-                        <button className="primary-button" onClick={initializeGrid}>
-                            {t.playAgain}
-                        </button>
-                    </div>
-                    
-                    <div className="game-board-container">
-                        <div className="chain-grid">
-                            {grid.map(cell => (
-                                <div
-                                    key={cell.id}
-                                    className={`chain-cell ${selectedCells.find(c => c.id === cell.id) ? 'selected' : ''}`}
-                                    style={{ backgroundColor: cell.color }}
-                                    onClick={() => handleCellClick(cell)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        // Pattern Master Game
-        const PatternMasterGame = ({ t }) => {
-            const [pattern, setPattern] = useState([]);
-            const [userPattern, setUserPattern] = useState([]);
-            const [level, setLevel] = useState(1);
-            const [score, setScore] = useState(0);
-            const [lives, setLives] = useState(3);
-            const [gameState, setGameState] = useState('ready');
-            const [flashButton, setFlashButton] = useState(null);
-
-            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#A8E6CF', '#FFD3B6', '#FFAAA5'];
-
-            useEffect(() => {
-                if (gameState === 'ready') {
-                    generatePattern();
-                }
-            }, [gameState, level]);
-
-            const generatePattern = () => {
-                const newPattern = [];
-                for (let i = 0; i < level + 2; i++) {
-                    newPattern.push(Math.floor(Math.random() * 9));
-                }
-                setPattern(newPattern);
-                setUserPattern([]);
-                showPattern(newPattern);
-            };
-
-            const showPattern = async (patternToShow) => {
-                setGameState('showing');
-                for (let i = 0; i < patternToShow.length; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 600));
-                    setFlashButton(patternToShow[i]);
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    setFlashButton(null);
-                }
-                setGameState('playing');
-            };
-
-            const handleButtonClick = (index) => {
-                if (gameState !== 'playing') return;
-
-                const newUserPattern = [...userPattern, index];
-                setUserPattern(newUserPattern);
-
-                if (pattern[newUserPattern.length - 1] !== index) {
-                    const newLives = lives - 1;
-                    setLives(newLives);
-                    if (newLives === 0) {
-                        setGameState('gameover');
-                    } else {
-                        setGameState('ready');
-                    }
-                } else if (newUserPattern.length === pattern.length) {
-                    setScore(score + level * 100);
-                    setLevel(level + 1);
-                    setGameState('ready');
-                }
-            };
-
-            const resetGame = () => {
-                setLevel(1);
-                setScore(0);
-                setLives(3);
-                setGameState('ready');
-            };
-
-            return (
-                <div className="game-container">
-                    <div className="game-header-info">
-                        <div className="game-stats">
-                            <div className="stat-item">
-                                <div className="stat-label">{t.level}</div>
-                                <div className="stat-value">{level}</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-label">{t.score}</div>
-                                <div className="stat-value">{score}</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-label">{t.lives}</div>
-                                <div className="stat-value">{lives}</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="game-board-container">
-                        <div className="pattern-status">
-                            {gameState === 'showing' && 'Regardez...'}
-                            {gameState === 'playing' && 'À vous!'}
-                            {gameState === 'ready' && 'Préparez-vous...'}
-                        </div>
-                        <div className="pattern-grid">
-                            {colors.map((color, index) => (
-                                <button
-                                    key={index}
-                                    className={`pattern-button ${flashButton === index ? 'flash' : ''}`}
-                                    style={{ backgroundColor: color }}
-                                    onClick={() => handleButtonClick(index)}
-                                    disabled={gameState !== 'playing'}
-                                />
-                            ))}
-                        </div>
-                    </div>
-
-                    {gameState === 'gameover' && (
-                        <div className="modal-overlay">
-                            <div className="modal-content">
-                                <div className="modal-title">{t.gameOver}</div>
-                                <div className="modal-score">{score}</div>
-                                <button className="primary-button" onClick={resetGame}>
-                                    {t.playAgain}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        // Reflex Rush Game
-        const ReflexRushGame = ({ t }) => {
-            const [score, setScore] = useState(0);
-            const [level, setLevel] = useState(1);
-            const [targets, setTargets] = useState([]);
-            const [gameActive, setGameActive] = useState(false);
-            const [timeLeft, setTimeLeft] = useState(30);
-            const arenaRef = useRef(null);
-
-            useEffect(() => {
-                if (gameActive && timeLeft > 0) {
-                    const timer = setInterval(() => {
-                        setTimeLeft(t => t - 1);
-                    }, 1000);
-                    return () => clearInterval(timer);
-                }
-                if (timeLeft === 0) {
-                    setGameActive(false);
-                }
-            }, [gameActive, timeLeft]);
-
-            useEffect(() => {
-                if (gameActive) {
-                    const interval = setInterval(() => {
-                        spawnTarget();
-                    }, Math.max(800 - level * 50, 300));
-                    return () => clearInterval(interval);
-                }
-            }, [gameActive, level]);
-
-            const spawnTarget = () => {
-                if (!arenaRef.current) return;
-                
-                const arena = arenaRef.current.getBoundingClientRect();
-                const target = {
-                    id: Date.now(),
-                    x: Math.random() * (arena.width - 70),
-                    y: Math.random() * (arena.height - 70),
-                    color: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A'][Math.floor(Math.random() * 4)],
-                    timeout: setTimeout(() => {
-                        setTargets(prev => prev.filter(t => t.id !== target.id));
-                    }, Math.max(1500 - level * 100, 500))
-                };
-                
-                setTargets(prev => [...prev, target]);
-            };
-
-            const handleTargetClick = (target) => {
-                clearTimeout(target.timeout);
-                setTargets(prev => prev.filter(t => t.id !== target.id));
-                setScore(score + 10);
-                
-                if ((score + 10) % 100 === 0) {
-                    setLevel(level + 1);
-                }
-            };
-
-            const startGame = () => {
-                setScore(0);
-                setLevel(1);
-                setTimeLeft(30);
-                setTargets([]);
-                setGameActive(true);
-            };
-
-            return (
-                <div className="game-container">
-                    <div className="game-header-info">
-                        <div className="game-stats">
-                            <div className="stat-item">
-                                <div className="stat-label">{t.score}</div>
-                                <div className="stat-value">{score}</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-label">{t.level}</div>
-                                <div className="stat-value">{level}</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-label">{t.time}</div>
-                                <div className="stat-value">{timeLeft}s</div>
-                            </div>
-                        </div>
-                        {!gameActive && (
-                            <button className="primary-button" onClick={startGame}>
-                                {score > 0 ? t.playAgain : t.start}
-                            </button>
-                        )}
-                    </div>
-                    
-                    <div className="game-board-container">
-                        <div className="reflex-arena" ref={arenaRef}>
-                            {targets.map(target => (
-                                <div
-                                    key={target.id}
-                                    className="reflex-target"
-                                    style={{
-                                        left: target.x,
-                                        top: target.y,
-                                        backgroundColor: target.color
-                                    }}
-                                    onClick={() => handleTargetClick(target)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-
-                    {!gameActive && score > 0 && (
-                        <div className="modal-overlay">
-                            <div className="modal-content">
-                                <div className="modal-title">{t.gameOver}</div>
-                                <div className="modal-score">{score}</div>
-                                <button className="primary-button" onClick={startGame}>
-                                    {t.playAgain}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        // Number Fusion Game
-        const NumberFusionGame = ({ t }) => {
-            const [grid, setGrid] = useState([]);
-            const [score, setScore] = useState(0);
-
-            useEffect(() => {
-                initializeGame();
-            }, []);
-
-            const initializeGame = () => {
-                const newGrid = Array(16).fill(0);
-                addRandomTile(newGrid);
-                addRandomTile(newGrid);
-                setGrid(newGrid);
-                setScore(0);
-            };
-
-            const addRandomTile = (currentGrid) => {
-                const emptyCells = currentGrid.map((val, idx) => val === 0 ? idx : null).filter(v => v !== null);
-                if (emptyCells.length > 0) {
-                    const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-                    currentGrid[randomIndex] = Math.random() < 0.9 ? 2 : 4;
-                }
-            };
-
-            return (
-                <div className="game-container">
-                    <div className="game-header-info">
-                        <div className="game-stats">
-                            <div className="stat-item">
-                                <div className="stat-label">{t.score}</div>
-                                <div className="stat-value">{score}</div>
-                            </div>
-                        </div>
-                        <button className="primary-button" onClick={initializeGame}>
-                            {t.playAgain}
-                        </button>
-                    </div>
-                    
-                    <div className="game-board-container">
-                        <div className="fusion-grid">
-                            {grid.map((value, index) => (
-                                <div 
-                                    key={index} 
-                                    className={`fusion-cell ${value > 0 ? 'filled' : ''}`}
-                                    style={{
-                                        backgroundColor: value > 0 ? `hsl(${Math.log2(value) * 20}, 70%, 60%)` : 'rgba(238, 228, 218, 0.35)'
-                                    }}
-                                >
-                                    {value > 0 ? value : ''}
-                                </div>
-                            ))}
-                        </div>
-                        <div className="fusion-controls">
-                            <div></div>
-                            <button className="fusion-arrow">↑</button>
-                            <div></div>
-                            <button className="fusion-arrow">←</button>
-                            <button className="fusion-arrow">↓</button>
-                            <button className="fusion-arrow">→</button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        // Block Stacker Game
-        const BlockStackerGame = ({ t }) => {
-            const [grid, setGrid] = useState([]);
-            const [currentRow, setCurrentRow] = useState(0);
-            const [currentPos, setCurrentPos] = useState(0);
-            const [blockWidth, setBlockWidth] = useState(7);
-            const [score, setScore] = useState(0);
-            const [gameActive, setGameActive] = useState(false);
-            const [direction, setDirection] = useState(1);
-
-            const gridWidth = 7;
-            const gridHeight = 15;
-
-            useEffect(() => {
-                if (gameActive) {
-                    const interval = setInterval(() => {
-                        setCurrentPos(pos => {
-                            const newPos = pos + direction;
-                            if (newPos <= 0 || newPos + blockWidth >= gridWidth) {
-                                setDirection(-direction);
-                                return pos;
-                            }
-                            return newPos;
-                        });
-                    }, 200);
-                    return () => clearInterval(interval);
-                }
-            }, [gameActive, direction, blockWidth]);
-
-            const startGame = () => {
-                const newGrid = Array(gridWidth * gridHeight).fill(0);
-                setGrid(newGrid);
-                setCurrentRow(gridHeight - 1);
-                setCurrentPos(0);
-                setBlockWidth(7);
-                setScore(0);
-                setGameActive(true);
-                setDirection(1);
-            };
-
-            const dropBlock = () => {
-                if (!gameActive) return;
-
-                const newGrid = [...grid];
-                let newWidth = blockWidth;
-                
-                for (let i = 0; i < blockWidth; i++) {
-                    const index = currentRow * gridWidth + currentPos + i;
-                    if (index < newGrid.length) {
-                        newGrid[index] = 1;
-                    }
-                }
-
-                if (currentRow < gridHeight - 1) {
-                    newWidth = Math.max(1, blockWidth - 1);
-                }
-
-                setGrid(newGrid);
-                setBlockWidth(newWidth);
-                setScore(score + 10);
-                
-                const newRow = currentRow - 1;
-                if (newRow < 0 || newWidth === 0) {
-                    setGameActive(false);
-                } else {
-                    setCurrentRow(newRow);
-                    setCurrentPos(0);
-                }
-            };
-
-            return (
-                <div className="game-container">
-                    <div className="game-header-info">
-                        <div className="game-stats">
-                            <div className="stat-item">
-                                <div className="stat-label">{t.score}</div>
-                                <div className="stat-value">{score}</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="game-board-container">
-                        <div className="stacker-container">
-                            <div className="stacker-grid">
-                                {Array(gridWidth * gridHeight).fill(0).map((_, index) => {
-                                    const row = Math.floor(index / gridWidth);
-                                    const col = index % gridWidth;
-                                    const isCurrentBlock = gameActive && row === currentRow && 
-                                        col >= currentPos && col < currentPos + blockWidth;
-                                    const isFilled = grid[index] === 1;
-                                    
-                                    return (
-                                        <div 
-                                            key={index} 
-                                            className={`stacker-cell ${isFilled || isCurrentBlock ? 'filled' : ''}`}
-                                        />
-                                    );
-                                })}
-                            </div>
-                            <div className="stacker-controls">
-                                {!gameActive ? (
-                                    <button className="primary-button" onClick={startGame}>
-                                        {score > 0 ? t.playAgain : t.start}
-                                    </button>
-                                ) : (
-                                    <button className="primary-button" onClick={dropBlock}>
-                                        Drop
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {!gameActive && score > 0 && (
-                        <div className="modal-overlay">
-                            <div className="modal-content">
-                                <div className="modal-title">{t.gameOver}</div>
-                                <div className="modal-score">{score}</div>
-                                <button className="primary-button" onClick={startGame}>
-                                    {t.playAgain}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        // Carré Game - FULL IMPLEMENTATION
-        const CarreGame = ({ t, language }) => {
             const [gameState, setGameState] = useState('setup');
             const [numPlayers, setNumPlayers] = useState(2);
             const [vsAI, setVsAI] = useState(false);
@@ -1488,26 +719,13 @@
                 { id: 2, name: `${t.player} 2`, color: 'red', isAI: false, score: 0 }
             ]);
             const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-            const [dots, setDots] = useState({});
-            const [squares, setSquares] = useState([]);
+            const [dots, setDots] = useState({}); // {`row-col`: colorName}
+            const [squares, setSquares] = useState([]); // [{row, col, color, number}]
 
-            const COLORS = {
-                blue: '#2196F3',
-                red: '#F44336',
-                yellow: '#FFC107',
-                green: '#4CAF50',
-                purple: '#9C27B0',
-                orange: '#FF9800'
-            };
-
-            const AI_DIFFICULTY = {
-                easy: { strategy: 'random' },
-                medium: { strategy: 'smart' },
-                hard: { strategy: 'aggressive' }
-            };
-
+            // Update players based on setup
             useEffect(() => {
                 const newPlayers = [];
+                const t = TRANSLATIONS[language];
                 for (let i = 0; i < numPlayers; i++) {
                     const colorKeys = Object.keys(COLORS);
                     newPlayers.push({
@@ -1531,6 +749,7 @@
             };
 
             const updatePlayerColor = (playerId, color) => {
+                // Check if color is already taken
                 const colorTaken = players.some(p => p.id !== playerId && p.color === color);
                 if (colorTaken) return;
                 
@@ -1546,16 +765,20 @@
             const checkSquaresFormed = (newDots, placedColor) => {
                 const formedSquares = [];
                 
+                // Check all possible squares on the grid
                 for (let row = 0; row < gridSize.rows; row++) {
                     for (let col = 0; col < gridSize.cols; col++) {
+                        // Check if this square already exists
                         const exists = squares.some(s => s.row === row && s.col === col);
                         if (exists) continue;
                         
+                        // Get the four corners
                         const topLeft = newDots[`${row}-${col}`];
                         const topRight = newDots[`${row}-${col + 1}`];
                         const bottomLeft = newDots[`${row + 1}-${col}`];
                         const bottomRight = newDots[`${row + 1}-${col + 1}`];
                         
+                        // Check if all four corners have the same color
                         if (topLeft && topRight && bottomLeft && bottomRight &&
                             topLeft === topRight && topRight === bottomLeft && bottomLeft === bottomRight) {
                             formedSquares.push({ row, col, color: topLeft });
@@ -1568,17 +791,19 @@
 
             const handleDotClick = (row, col) => {
                 if (gameState !== 'playing') return;
-                if (getDotColor(row, col)) return;
+                if (getDotColor(row, col)) return; // Already placed
                 
                 const currentPlayer = players[currentPlayerIndex];
                 const newDots = { ...dots, [`${row}-${col}`]: currentPlayer.color };
                 
                 setDots(newDots);
                 
+                // Check for newly formed squares
                 const formedSquares = checkSquaresFormed(newDots, currentPlayer.color);
                 const playerSquares = formedSquares.filter(sq => sq.color === currentPlayer.color);
                 
                 if (playerSquares.length > 0) {
+                    // Add numbers to new squares
                     const currentPlayerSquareCount = squares.filter(s => s.color === currentPlayer.color).length;
                     const numberedSquares = playerSquares.map((sq, idx) => ({
                         ...sq,
@@ -1587,18 +812,22 @@
                     
                     setSquares([...squares, ...numberedSquares]);
                     
+                    // Update score
                     const updatedPlayers = [...players];
                     updatedPlayers[currentPlayerIndex].score += playerSquares.length;
                     setPlayers(updatedPlayers);
                 }
                 
+                // Always move to next player (turn alternates regardless of square formation)
                 const nextIndex = (currentPlayerIndex + 1) % players.length;
                 setCurrentPlayerIndex(nextIndex);
                 
+                // Trigger AI move if next player is AI
                 if (players[nextIndex].isAI) {
                     setTimeout(() => makeAIMove(nextIndex, newDots), 800);
                 }
                 
+                // Check if game is over (all dots placed)
                 const totalDots = (gridSize.rows + 1) * (gridSize.cols + 1);
                 if (Object.keys(newDots).length >= totalDots) {
                     setTimeout(() => setGameState('finished'), 500);
@@ -1625,8 +854,10 @@
                 const aiColor = players[playerIndex].color;
                 
                 if (aiDifficulty === 'easy') {
+                    // Random move
                     selectedDot = availableDots[Math.floor(Math.random() * availableDots.length)];
                 } else {
+                    // Look for moves that complete squares
                     let bestMove = null;
                     let maxSquares = 0;
                     
@@ -1643,10 +874,13 @@
                     if (maxSquares > 0 && aiDifficulty !== 'easy') {
                         selectedDot = bestMove;
                     } else {
+                        // Look for strategic positions (corners of potential squares)
                         const strategicMoves = availableDots.filter(dot => {
+                            // Check if this position could help complete future squares
                             let adjacentSameColor = 0;
                             const { row, col } = dot;
                             
+                            // Check adjacent dots
                             [[row-1, col], [row+1, col], [row, col-1], [row, col+1]].forEach(([r, c]) => {
                                 if (currentDots[`${r}-${c}`] === aiColor) adjacentSameColor++;
                             });
@@ -1674,139 +908,116 @@
                 setCurrentPlayerIndex(0);
             };
 
+            // Render functions
             const renderSetup = () => (
-                <div className="game-container">
-                    <div className="game-board-container" style={{maxWidth: '900px', margin: '0 auto'}}>
-                        <h2 style={{fontSize: '2rem', fontWeight: '700', color: 'var(--dark)', marginBottom: '2rem', textAlign: 'center'}}>
-                            {t.setupTitle}
-                        </h2>
-                        
-                        <div style={{marginBottom: '2rem'}}>
-                            <div style={{fontSize: '1.1rem', fontWeight: '600', color: 'var(--dark-3)', marginBottom: '1rem'}}>
-                                {t.numPlayers}
-                            </div>
-                            <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
-                                {[1, 2, 3].map(num => (
+                <div className="setup-screen">
+                    <h2 className="setup-title">{t.setupTitle}</h2>
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.numPlayers}</div>
+                        <div className="button-group">
+                            {[1, 2, 3].map(num => (
+                                <button
+                                    key={num}
+                                    className={`option-button ${numPlayers === num ? 'selected' : ''}`}
+                                    onClick={() => setNumPlayers(num)}
+                                >
+                                    {num} {num > 1 ? t.players : t.player}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.gameMode}</div>
+                        <div className="button-group">
+                            <button
+                                className={`option-button ${!vsAI ? 'selected' : ''}`}
+                                onClick={() => setVsAI(false)}
+                            >
+                                {t.playersOnly}
+                            </button>
+                            <button
+                                className={`option-button ${vsAI ? 'selected' : ''}`}
+                                onClick={() => setVsAI(true)}
+                            >
+                                {t.vsComputer}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {vsAI && (
+                        <div className="setup-section">
+                            <div className="section-label">{t.aiDifficulty}</div>
+                            <div className="button-group">
+                                {Object.entries(AI_DIFFICULTY).map(([key, value]) => (
                                     <button
-                                        key={num}
-                                        className={numPlayers === num ? 'primary-button' : 'secondary-button'}
-                                        onClick={() => setNumPlayers(num)}
-                                        style={{flex: 1, minWidth: '120px'}}
+                                        key={key}
+                                        className={`option-button ${aiDifficulty === key ? 'selected' : ''}`}
+                                        onClick={() => setAiDifficulty(key)}
                                     >
-                                        {num} {num > 1 ? t.players : t.player}
+                                        {t[key]}
                                     </button>
                                 ))}
                             </div>
                         </div>
-                        
-                        <div style={{marginBottom: '2rem'}}>
-                            <div style={{fontSize: '1.1rem', fontWeight: '600', color: 'var(--dark-3)', marginBottom: '1rem'}}>
-                                {t.gameMode}
-                            </div>
-                            <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
+                    )}
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.gridSize}</div>
+                        <div className="grid-size-options">
+                            {[
+                                { rows: 5, cols: 5, label: t.small },
+                                { rows: 8, cols: 8, label: t.medium },
+                                { rows: 10, cols: 10, label: t.large },
+                                { rows: 12, cols: 12, label: t.veryLarge }
+                            ].map(size => (
                                 <button
-                                    className={!vsAI ? 'primary-button' : 'secondary-button'}
-                                    onClick={() => setVsAI(false)}
-                                    style={{flex: 1}}
+                                    key={`${size.rows}x${size.cols}`}
+                                    className={`option-button ${gridSize.rows === size.rows && gridSize.cols === size.cols ? 'selected' : ''}`}
+                                    onClick={() => setGridSize({ rows: size.rows, cols: size.cols })}
                                 >
-                                    {t.playersOnly}
+                                    {size.rows}×{size.cols} ({size.label})
                                 </button>
-                                <button
-                                    className={vsAI ? 'primary-button' : 'secondary-button'}
-                                    onClick={() => setVsAI(true)}
-                                    style={{flex: 1}}
-                                >
-                                    {t.vsComputer}
-                                </button>
-                            </div>
+                            ))}
                         </div>
-                        
-                        {vsAI && (
-                            <div style={{marginBottom: '2rem'}}>
-                                <div style={{fontSize: '1.1rem', fontWeight: '600', color: 'var(--dark-3)', marginBottom: '1rem'}}>
-                                    {t.aiDifficulty}
-                                </div>
-                                <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
-                                    {Object.entries(AI_DIFFICULTY).map(([key, value]) => (
-                                        <button
-                                            key={key}
-                                            className={aiDifficulty === key ? 'primary-button' : 'secondary-button'}
-                                            onClick={() => setAiDifficulty(key)}
-                                            style={{flex: 1}}
-                                        >
-                                            {t[key]}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        
-                        <div style={{marginBottom: '2rem'}}>
-                            <div style={{fontSize: '1.1rem', fontWeight: '600', color: 'var(--dark-3)', marginBottom: '1rem'}}>
-                                {t.gridSize}
-                            </div>
-                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem'}}>
-                                {[
-                                    { rows: 5, cols: 5, label: t.small },
-                                    { rows: 8, cols: 8, label: t.medium },
-                                    { rows: 10, cols: 10, label: t.large },
-                                    { rows: 12, cols: 12, label: t.veryLarge }
-                                ].map(size => (
-                                    <button
-                                        key={`${size.rows}x${size.cols}`}
-                                        className={gridSize.rows === size.rows && gridSize.cols === size.cols ? 'primary-button' : 'secondary-button'}
-                                        onClick={() => setGridSize({ rows: size.rows, cols: size.cols })}
-                                    >
-                                        {size.rows}×{size.cols} ({size.label})
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                        
-                        <div style={{marginBottom: '2rem'}}>
-                            <div style={{fontSize: '1.1rem', fontWeight: '600', color: 'var(--dark-3)', marginBottom: '1rem'}}>
-                                {t.playerColors}
-                            </div>
+                    </div>
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.playerColors}</div>
+                        <div className="player-setup">
                             {players.map(player => (
-                                <div key={player.id} style={{
-                                    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-                                    padding: '1.5rem',
-                                    borderRadius: '12px',
-                                    marginBottom: '1rem'
-                                }}>
-                                    <div style={{fontWeight: '600', fontSize: '1.1rem', marginBottom: '0.75rem'}}>
-                                        {player.name} {player.isAI && t.ai}
-                                    </div>
-                                    <div style={{display: 'flex', gap: '0.5rem', flexWrap: 'wrap'}}>
-                                        {Object.entries(COLORS).map(([colorName, colorValue]) => {
-                                            const isTaken = players.some(p => p.id !== player.id && p.color === colorName);
-                                            return (
-                                                <div
-                                                    key={colorName}
-                                                    style={{
-                                                        width: '40px',
-                                                        height: '40px',
-                                                        borderRadius: '50%',
-                                                        backgroundColor: colorValue,
-                                                        opacity: isTaken ? 0.3 : 1,
-                                                        cursor: isTaken ? 'not-allowed' : 'pointer',
-                                                        border: player.color === colorName ? '4px solid var(--dark)' : '3px solid transparent',
-                                                        transition: 'all 0.3s ease',
-                                                        boxShadow: player.color === colorName ? '0 0 0 2px white' : 'none'
-                                                    }}
-                                                    onClick={() => !isTaken && updatePlayerColor(player.id, colorName)}
-                                                />
-                                            );
-                                        })}
+                                <div key={player.id} className="player-card">
+                                    <div className="player-info">
+                                        <div className="player-name">
+                                            {player.name} {player.isAI && t.ai}
+                                        </div>
+                                        <div className="color-picker">
+                                            {Object.entries(COLORS).map(([colorName, colorValue]) => {
+                                                const isTaken = players.some(p => p.id !== player.id && p.color === colorName);
+                                                return (
+                                                    <div
+                                                        key={colorName}
+                                                        className={`color-option ${player.color === colorName ? 'selected' : ''}`}
+                                                        style={{ 
+                                                            backgroundColor: colorValue,
+                                                            opacity: isTaken ? 0.3 : 1,
+                                                            cursor: isTaken ? 'not-allowed' : 'pointer'
+                                                        }}
+                                                        onClick={() => !isTaken && updatePlayerColor(player.id, colorName)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        
-                        <button className="primary-button" onClick={startGame} style={{width: '100%', fontSize: '1.3rem', padding: '1.5rem'}}>
-                            {t.startGame}
-                        </button>
                     </div>
+                    
+                    <button className="start-button" onClick={startGame}>
+                        {t.startGame}
+                    </button>
                 </div>
             );
 
@@ -1817,25 +1028,28 @@
                 const height = (gridSize.rows + 1) * cellSize;
                 
                 return (
-                    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{display: 'block', maxWidth: '100%', height: 'auto'}}>
+                    <svg className="board-svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+                        {/* Draw grid lines */}
                         {Array.from({ length: gridSize.rows }).map((_, row) =>
                             Array.from({ length: gridSize.cols }).map((_, col) => (
-                                <rect
-                                    key={`grid-${row}-${col}`}
-                                    x={col * cellSize}
-                                    y={row * cellSize}
-                                    width={cellSize}
-                                    height={cellSize}
-                                    fill="none"
-                                    stroke="#E0E0E0"
-                                    strokeWidth="1"
-                                    strokeDasharray="3,3"
-                                />
+                                <g key={`grid-${row}-${col}`}>
+                                    <rect
+                                        x={col * cellSize}
+                                        y={row * cellSize}
+                                        width={cellSize}
+                                        height={cellSize}
+                                        fill="none"
+                                        stroke="#E0E0E0"
+                                        strokeWidth="1"
+                                        strokeDasharray="3,3"
+                                    />
+                                </g>
                             ))
                         )}
                         
+                        {/* Draw completed squares */}
                         {squares.map((square, idx) => (
-                            <g key={`square-${idx}`}>
+                            <g key={`square-${idx}`} className="square-rect">
                                 <rect
                                     x={square.col * cellSize}
                                     y={square.row * cellSize}
@@ -1847,39 +1061,36 @@
                                     strokeWidth="3"
                                 />
                                 <text
+                                    className="square-number"
                                     x={square.col * cellSize + cellSize / 2}
                                     y={square.row * cellSize + cellSize / 2}
-                                    style={{
-                                        fontFamily: 'JetBrains Mono, monospace',
-                                        fontWeight: 700,
-                                        fontSize: '18px',
-                                        fill: 'white',
-                                        textAnchor: 'middle',
-                                        dominantBaseline: 'middle'
-                                    }}
                                 >
                                     {square.number}
                                 </text>
                             </g>
                         ))}
                         
+                        {/* Draw dots */}
                         {Array.from({ length: gridSize.rows + 1 }).map((_, row) =>
                             Array.from({ length: gridSize.cols + 1 }).map((_, col) => {
                                 const dotColor = getDotColor(row, col);
                                 const isPlaced = !!dotColor;
                                 
                                 return (
-                                    <circle
+                                    <g
                                         key={`dot-${row}-${col}`}
-                                        cx={col * cellSize}
-                                        cy={row * cellSize}
-                                        r={isPlaced ? dotRadius : dotRadius - 2}
-                                        fill={isPlaced ? COLORS[dotColor] : '#999'}
-                                        stroke={isPlaced ? '#fff' : 'none'}
-                                        strokeWidth={isPlaced ? 2 : 0}
-                                        style={{cursor: isPlaced ? 'default' : 'pointer'}}
+                                        className={isPlaced ? '' : 'dot-interactive'}
                                         onClick={() => !isPlaced && handleDotClick(row, col)}
-                                    />
+                                    >
+                                        <circle
+                                            cx={col * cellSize}
+                                            cy={row * cellSize}
+                                            r={isPlaced ? dotRadius : dotRadius - 2}
+                                            fill={isPlaced ? COLORS[dotColor] : '#999'}
+                                            stroke={isPlaced ? '#fff' : 'none'}
+                                            strokeWidth={isPlaced ? 2 : 0}
+                                        />
+                                    </g>
                                 );
                             })
                         )}
@@ -1891,75 +1102,54 @@
                 const currentPlayer = players[currentPlayerIndex];
                 
                 return (
-                    <div className="game-container">
-                        <div className="game-header-info">
-                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                                <div style={{
-                                    width: '24px',
-                                    height: '24px',
-                                    borderRadius: '50%',
-                                    backgroundColor: COLORS[currentPlayer.color],
-                                    border: '3px solid var(--dark)'
-                                }} />
-                                <span style={{fontSize: '1.2rem', fontWeight: '600'}}>
-                                    {currentPlayer.name} {currentPlayer.isAI && t.ai}
-                                </span>
+                    <div className="game-screen">
+                        <div className="game-header">
+                            <div className="current-player">
+                                <div
+                                    className="player-indicator"
+                                    style={{ backgroundColor: COLORS[currentPlayer.color] }}
+                                />
+                                <span>{currentPlayer.name} {currentPlayer.isAI && t.ai}</span>
                             </div>
-                            <div style={{display: 'flex', gap: '0.75rem'}}>
-                                <button className="primary-button" onClick={newGame}>
+                            <div className="game-controls">
+                                <button className="control-button new-game" onClick={newGame}>
                                     {t.newGame}
                                 </button>
-                                <button className="secondary-button" onClick={forfeit}>
+                                <button className="control-button forfeit" onClick={forfeit}>
                                     {t.forfeit}
                                 </button>
                             </div>
                         </div>
                         
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr auto', gap: '1.5rem', alignItems: 'start'}}>
-                            <div className="game-board-container">
-                                {renderBoard()}
+                        <div className="game-content">
+                            <div className="board-container">
+                                <div className="game-board">
+                                    {renderBoard()}
+                                </div>
                             </div>
                             
-                            <div className="game-board-container" style={{minWidth: '280px'}}>
-                                <div style={{fontSize: '1.3rem', fontWeight: '700', textAlign: 'center', marginBottom: '1.5rem'}}>
-                                    {t.scoreboard}
+                            <div className="scoreboard">
+                                <div className="scoreboard-title">{t.scoreboard}</div>
+                                <div className="score-list">
+                                    {players.map((player, idx) => (
+                                        <div
+                                            key={player.id}
+                                            className={`score-item ${idx === currentPlayerIndex ? 'active' : ''}`}
+                                        >
+                                            <div className="score-player">
+                                                <div
+                                                    className="score-color"
+                                                    style={{ backgroundColor: COLORS[player.color] }}
+                                                />
+                                                <span className="score-name">
+                                                    {player.name}
+                                                    {player.isAI && ` ${t.ai}`}
+                                                </span>
+                                            </div>
+                                            <div className="score-value">{player.score}</div>
+                                        </div>
+                                    ))}
                                 </div>
-                                {players.map((player, idx) => (
-                                    <div key={player.id} style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '1rem',
-                                        background: idx === currentPlayerIndex ? 
-                                            'linear-gradient(135deg, var(--accent) 0%, #FFE066 100%)' : 
-                                            'linear-gradient(135deg, #f5f7fa 0%, #e8eef3 100%)',
-                                        borderRadius: '12px',
-                                        marginBottom: '1rem',
-                                        transform: idx === currentPlayerIndex ? 'scale(1.05)' : 'scale(1)',
-                                        transition: 'all 0.3s ease'
-                                    }}>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
-                                            <div style={{
-                                                width: '20px',
-                                                height: '20px',
-                                                borderRadius: '50%',
-                                                backgroundColor: COLORS[player.color],
-                                                border: '2px solid var(--dark)'
-                                            }} />
-                                            <span style={{fontWeight: '600'}}>
-                                                {player.name} {player.isAI && t.ai}
-                                            </span>
-                                        </div>
-                                        <div style={{
-                                            fontSize: '1.5rem',
-                                            fontWeight: '700',
-                                            fontFamily: 'JetBrains Mono, monospace',
-                                            color: 'var(--primary)'
-                                        }}>
-                                            {player.score}
-                                        </div>
-                                    </div>
-                                ))}
                             </div>
                         </div>
                     </div>
@@ -1972,40 +1162,35 @@
                 const isDraw = sortedPlayers.filter(p => p.score === winner.score).length > 1;
                 
                 return (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
-                            <div className="modal-title">
+                    <div className="winner-screen">
+                        <div className="winner-content">
+                            <div className="winner-title">
                                 {isDraw ? t.draw : t.victory}
                             </div>
                             {!isDraw && (
-                                <div style={{fontSize: '1.8rem', fontWeight: '700', color: COLORS[winner.color], marginBottom: '2rem'}}>
+                                <div className="winner-name" style={{ color: COLORS[winner.color] }}>
                                     {winner.name}
                                 </div>
                             )}
-                            <div style={{marginBottom: '2rem'}}>
+                            <div className="final-scores">
                                 {sortedPlayers.map(player => (
-                                    <div key={player.id} style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        padding: '0.75rem',
-                                        marginBottom: '0.5rem',
-                                        background: '#F5F5F5',
-                                        borderRadius: '8px'
-                                    }}>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                                            <div style={{
-                                                width: '16px',
-                                                height: '16px',
-                                                borderRadius: '50%',
-                                                backgroundColor: COLORS[player.color]
-                                            }} />
+                                    <div key={player.id} className="final-score-item">
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <div
+                                                style={{
+                                                    width: '16px',
+                                                    height: '16px',
+                                                    borderRadius: '50%',
+                                                    backgroundColor: COLORS[player.color]
+                                                }}
+                                            />
                                             <span>{player.name}</span>
                                         </div>
                                         <strong>{player.score} {player.score > 1 ? t.squares : t.square}</strong>
                                     </div>
                                 ))}
                             </div>
-                            <button className="primary-button" onClick={newGame} style={{width: '100%'}}>
+                            <button className="start-button" onClick={newGame}>
                                 {t.newGame}
                             </button>
                         </div>
@@ -2014,16 +1199,36 @@
             };
 
             return (
-                <>
+                <div className="app-container">
+                    <div className="language-toggle">
+                        <button 
+                            className={`lang-button ${language === 'fr' ? 'active' : ''}`}
+                            onClick={() => setLanguage('fr')}
+                        >
+                            FR
+                        </button>
+                        <button 
+                            className={`lang-button ${language === 'en' ? 'active' : ''}`}
+                            onClick={() => setLanguage('en')}
+                        >
+                            EN
+                        </button>
+                    </div>
+                    
+                    <div className="header">
+                        <h1 className="logo">{t.title}</h1>
+                        <p className="tagline">{t.tagline}</p>
+                    </div>
+                    
                     {gameState === 'setup' && renderSetup()}
                     {gameState === 'playing' && renderGame()}
                     {gameState === 'finished' && renderWinner()}
-                </>
+                </div>
             );
         };
 
-        // Render App
-        ReactDOM.render(<ArcadeApp />, document.getElementById('root'));
+        ReactDOM.render(<CarreGame />, document.getElementById('root'));
     </script>
 </body>
 </html>
+

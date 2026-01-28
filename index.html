@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Square - Jeu de Points Colorés</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #FFD23F;
+            --success: #06D6A0;
+            --danger: #EF476F;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --grid-bg: #FFFFFF;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 2rem 1rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            color: var(--light);
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .language-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-button {
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .lang-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .lang-button:hover:not(.active) {
+            background: #F0F0F0;
+        }
+
+        /* Setup Screen */
+        .setup-screen {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: clamp(1.5rem, 4vw, 3rem);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .setup-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .setup-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .option-button {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem 1.5rem;
+            border: 2px solid #E0E0E0;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .option-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .option-button.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .grid-size-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .player-setup {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .player-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .player-info {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--dark);
+            transform: scale(1.15);
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #FF8C61 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 107, 53, 0.5);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        /* Game Screen */
+        .game-screen {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .game-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .current-player {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+        }
+
+        .player-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid var(--dark);
+            animation: pulse 2s infinite;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .control-button.new-game {
+            background: var(--success);
+            color: white;
+        }
+
+        .control-button.forfeit {
+            background: var(--danger);
+            color: white;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .game-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .game-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scoreboard */
+        .scoreboard {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow);
+            min-width: 280px;
+        }
+
+        .scoreboard-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .score-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef3 100%);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .score-item.active {
+            background: linear-gradient(135deg, var(--accent) 0%, #FFE066 100%);
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255, 210, 63, 0.4);
+        }
+
+        .score-player {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--dark);
+        }
+
+        .score-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+            color: var(--primary);
+        }
+
+        /* Game Board */
+        .board-container {
+            background: var(--grid-bg);
+            padding: clamp(1rem, 3vw, 2rem);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--shadow);
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-board {
+            display: inline-block;
+            position: relative;
+        }
+
+        .board-svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .dot-interactive {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dot-interactive:hover circle {
+            r: 8;
+            filter: brightness(1.2);
+        }
+
+        .square-rect {
+            animation: squareAppear 0.5s ease-out;
+        }
+
+        .square-number {
+            font-family: 'DM Mono', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            fill: white;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+        }
+
+        .grid-line {
+            stroke: #E0E0E0;
+            stroke-width: 1;
+            stroke-dasharray: 2,2;
+        }
+
+        /* Winner Screen */
+        .winner-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .winner-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .winner-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .winner-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .final-scores {
+            margin-bottom: 2rem;
+        }
+
+        .final-score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #F5F5F5;
+            border-radius: 8px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes squareAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .setup-screen {
+                padding: 1.5rem;
+            }
+
+            .option-button {
+                min-width: 100px;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .board-container {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-header {
+                padding: 1rem;
+            }
+
+            .current-player {
+                font-size: 1rem;
+            }
+
+            .control-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .scoreboard {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Translations
+        const TRANSLATIONS = {
+            fr: {
+                title: "SQUARE",
+                tagline: "Placer des points colorés et former des carrés",
+                setupTitle: "Configuration de la partie",
+                numPlayers: "Nombre de joueurs",
+                player: "Joueur",
+                players: "Joueurs",
+                gameMode: "Mode de jeu",
+                playersOnly: "Joueurs seulement",
+                vsComputer: "Contre l'ordinateur",
+                aiDifficulty: "Difficulté de l'IA",
+                gridSize: "Taille de la grille",
+                small: "Petit",
+                medium: "Moyen",
+                large: "Grand",
+                veryLarge: "Très grand",
+                playerColors: "Couleurs des joueurs",
+                startGame: "Commencer la partie",
+                newGame: "Nouvelle partie",
+                forfeit: "Déclarer forfait",
+                scoreboard: "Tableau des scores",
+                victory: "Victoire !",
+                draw: "Égalité !",
+                squares: "carrés",
+                square: "carré",
+                ai: "(IA)",
+                easy: "Facile",
+                medium: "Moyen",
+                hard: "Difficile"
+            },
+            en: {
+                title: "SQUARE",
+                tagline: "Place colored dots and form squares",
+                setupTitle: "Game Setup",
+                numPlayers: "Number of players",
+                player: "Player",
+                players: "Players",
+                gameMode: "Game mode",
+                playersOnly: "Players only",
+                vsComputer: "VS Computer",
+                aiDifficulty: "AI Difficulty",
+                gridSize: "Grid size",
+                small: "Small",
+                medium: "Medium",
+                large: "Large",
+                veryLarge: "Very large",
+                playerColors: "Player colors",
+                startGame: "Start Game",
+                newGame: "New Game",
+                forfeit: "Forfeit",
+                scoreboard: "Scoreboard",
+                victory: "Victory!",
+                draw: "Draw!",
+                squares: "squares",
+                square: "square",
+                ai: "(AI)",
+                easy: "Easy",
+                medium: "Medium",
+                hard: "Hard"
+            }
+        };
+
+        // Color options for players
+        const COLORS = {
+            blue: '#2196F3',
+            red: '#F44336',
+            yellow: '#FFC107',
+            green: '#4CAF50',
+            purple: '#9C27B0',
+            orange: '#FF9800'
+        };
+
+        // AI difficulty levels
+        const AI_DIFFICULTY = {
+            easy: { strategy: 'random' },
+            medium: { strategy: 'smart' },
+            hard: { strategy: 'aggressive' }
+        };
+
+        const CarreGame = () => {
+            const [language, setLanguage] = useState('fr');
+            const t = TRANSLATIONS[language];
+            const [gameState, setGameState] = useState('setup');
+            const [numPlayers, setNumPlayers] = useState(2);
+            const [vsAI, setVsAI] = useState(false);
+            const [aiDifficulty, setAiDifficulty] = useState('medium');
+            const [gridSize, setGridSize] = useState({ rows: 8, cols: 8 });
+            const [players, setPlayers] = useState([
+                { id: 1, name: `${t.player} 1`, color: 'blue', isAI: false, score: 0 },
+                { id: 2, name: `${t.player} 2`, color: 'red', isAI: false, score: 0 }
+            ]);
+            const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+            const [dots, setDots] = useState({}); // {`row-col`: colorName}
+            const [squares, setSquares] = useState([]); // [{row, col, color, number}]
+
+            // Update players based on setup
+            useEffect(() => {
+                const newPlayers = [];
+                const t = TRANSLATIONS[language];
+                for (let i = 0; i < numPlayers; i++) {
+                    const colorKeys = Object.keys(COLORS);
+                    newPlayers.push({
+                        id: i + 1,
+                        name: `${t.player} ${i + 1}`,
+                        color: colorKeys[i % colorKeys.length],
+                        isAI: vsAI && i > 0,
+                        score: 0
+                    });
+                }
+                setPlayers(newPlayers);
+            }, [numPlayers, vsAI, language]);
+
+            const startGame = () => {
+                setDots({});
+                setSquares([]);
+                setCurrentPlayerIndex(0);
+                setGameState('playing');
+                const updatedPlayers = players.map(p => ({ ...p, score: 0 }));
+                setPlayers(updatedPlayers);
+            };
+
+            const updatePlayerColor = (playerId, color) => {
+                // Check if color is already taken
+                const colorTaken = players.some(p => p.id !== playerId && p.color === color);
+                if (colorTaken) return;
+                
+                setPlayers(players.map(p => 
+                    p.id === playerId ? { ...p, color } : p
+                ));
+            };
+
+            const getDotColor = (row, col) => {
+                return dots[`${row}-${col}`];
+            };
+
+            const checkSquaresFormed = (newDots, placedColor) => {
+                const formedSquares = [];
+                
+                // Check all possible squares on the grid
+                for (let row = 0; row < gridSize.rows; row++) {
+                    for (let col = 0; col < gridSize.cols; col++) {
+                        // Check if this square already exists
+                        const exists = squares.some(s => s.row === row && s.col === col);
+                        if (exists) continue;
+                        
+                        // Get the four corners
+                        const topLeft = newDots[`${row}-${col}`];
+                        const topRight = newDots[`${row}-${col + 1}`];
+                        const bottomLeft = newDots[`${row + 1}-${col}`];
+                        const bottomRight = newDots[`${row + 1}-${col + 1}`];
+                        
+                        // Check if all four corners have the same color
+                        if (topLeft && topRight && bottomLeft && bottomRight &&
+                            topLeft === topRight && topRight === bottomLeft && bottomLeft === bottomRight) {
+                            formedSquares.push({ row, col, color: topLeft });
+                        }
+                    }
+                }
+                
+                return formedSquares;
+            };
+
+            const handleDotClick = (row, col) => {
+                if (gameState !== 'playing') return;
+                if (getDotColor(row, col)) return; // Already placed
+                
+                const currentPlayer = players[currentPlayerIndex];
+                const newDots = { ...dots, [`${row}-${col}`]: currentPlayer.color };
+                
+                setDots(newDots);
+                
+                // Check for newly formed squares
+                const formedSquares = checkSquaresFormed(newDots, currentPlayer.color);
+                const playerSquares = formedSquares.filter(sq => sq.color === currentPlayer.color);
+                
+                if (playerSquares.length > 0) {
+                    // Add numbers to new squares
+                    const currentPlayerSquareCount = squares.filter(s => s.color === currentPlayer.color).length;
+                    const numberedSquares = playerSquares.map((sq, idx) => ({
+                        ...sq,
+                        number: currentPlayerSquareCount + idx + 1
+                    }));
+                    
+                    setSquares([...squares, ...numberedSquares]);
+                    
+                    // Update score
+                    const updatedPlayers = [...players];
+                    updatedPlayers[currentPlayerIndex].score += playerSquares.length;
+                    setPlayers(updatedPlayers);
+                }
+                
+                // Always move to next player (turn alternates regardless of square formation)
+                const nextIndex = (currentPlayerIndex + 1) % players.length;
+                setCurrentPlayerIndex(nextIndex);
+                
+                // Trigger AI move if next player is AI
+                if (players[nextIndex].isAI) {
+                    setTimeout(() => makeAIMove(nextIndex, newDots), 800);
+                }
+                
+                // Check if game is over (all dots placed)
+                const totalDots = (gridSize.rows + 1) * (gridSize.cols + 1);
+                if (Object.keys(newDots).length >= totalDots) {
+                    setTimeout(() => setGameState('finished'), 500);
+                }
+            };
+
+            const getAvailableDots = (currentDots) => {
+                const available = [];
+                for (let row = 0; row <= gridSize.rows; row++) {
+                    for (let col = 0; col <= gridSize.cols; col++) {
+                        if (!currentDots[`${row}-${col}`]) {
+                            available.push({ row, col });
+                        }
+                    }
+                }
+                return available;
+            };
+
+            const makeAIMove = (playerIndex, currentDots) => {
+                const availableDots = getAvailableDots(currentDots);
+                if (availableDots.length === 0) return;
+                
+                let selectedDot;
+                const aiColor = players[playerIndex].color;
+                
+                if (aiDifficulty === 'easy') {
+                    // Random move
+                    selectedDot = availableDots[Math.floor(Math.random() * availableDots.length)];
+                } else {
+                    // Look for moves that complete squares
+                    let bestMove = null;
+                    let maxSquares = 0;
+                    
+                    for (const dot of availableDots) {
+                        const testDots = { ...currentDots, [`${dot.row}-${dot.col}`]: aiColor };
+                        const formed = checkSquaresFormed(testDots, aiColor).filter(sq => sq.color === aiColor);
+                        
+                        if (formed.length > maxSquares) {
+                            maxSquares = formed.length;
+                            bestMove = dot;
+                        }
+                    }
+                    
+                    if (maxSquares > 0 && aiDifficulty !== 'easy') {
+                        selectedDot = bestMove;
+                    } else {
+                        // Look for strategic positions (corners of potential squares)
+                        const strategicMoves = availableDots.filter(dot => {
+                            // Check if this position could help complete future squares
+                            let adjacentSameColor = 0;
+                            const { row, col } = dot;
+                            
+                            // Check adjacent dots
+                            [[row-1, col], [row+1, col], [row, col-1], [row, col+1]].forEach(([r, c]) => {
+                                if (currentDots[`${r}-${c}`] === aiColor) adjacentSameColor++;
+                            });
+                            
+                            return adjacentSameColor > 0;
+                        });
+                        
+                        selectedDot = strategicMoves.length > 0 ?
+                            strategicMoves[Math.floor(Math.random() * strategicMoves.length)] :
+                            availableDots[Math.floor(Math.random() * availableDots.length)];
+                    }
+                }
+                
+                handleDotClick(selectedDot.row, selectedDot.col);
+            };
+
+            const forfeit = () => {
+                setGameState('finished');
+            };
+
+            const newGame = () => {
+                setGameState('setup');
+                setDots({});
+                setSquares([]);
+                setCurrentPlayerIndex(0);
+            };
+
+            // Render functions
+            const renderSetup = () => (
+                <div className="setup-screen">
+                    <h2 className="setup-title">{t.setupTitle}</h2>
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.numPlayers}</div>
+                        <div className="button-group">
+                            {[1, 2, 3].map(num => (
+                                <button
+                                    key={num}
+                                    className={`option-button ${numPlayers === num ? 'selected' : ''}`}
+                                    onClick={() => setNumPlayers(num)}
+                                >
+                                    {num} {num > 1 ? t.players : t.player}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.gameMode}</div>
+                        <div className="button-group">
+                            <button
+                                className={`option-button ${!vsAI ? 'selected' : ''}`}
+                                onClick={() => setVsAI(false)}
+                            >
+                                {t.playersOnly}
+                            </button>
+                            <button
+                                className={`option-button ${vsAI ? 'selected' : ''}`}
+                                onClick={() => setVsAI(true)}
+                            >
+                                {t.vsComputer}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {vsAI && (
+                        <div className="setup-section">
+                            <div className="section-label">{t.aiDifficulty}</div>
+                            <div className="button-group">
+                                {Object.entries(AI_DIFFICULTY).map(([key, value]) => (
+                                    <button
+                                        key={key}
+                                        className={`option-button ${aiDifficulty === key ? 'selected' : ''}`}
+                                        onClick={() => setAiDifficulty(key)}
+                                    >
+                                        {t[key]}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.gridSize}</div>
+                        <div className="grid-size-options">
+                            {[
+                                { rows: 5, cols: 5, label: t.small },
+                                { rows: 8, cols: 8, label: t.medium },
+                                { rows: 10, cols: 10, label: t.large },
+                                { rows: 12, cols: 12, label: t.veryLarge }
+                            ].map(size => (
+                                <button
+                                    key={`${size.rows}x${size.cols}`}
+                                    className={`option-button ${gridSize.rows === size.rows && gridSize.cols === size.cols ? 'selected' : ''}`}
+                                    onClick={() => setGridSize({ rows: size.rows, cols: size.cols })}
+                                >
+                                    {size.rows}×{size.cols} ({size.label})
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="setup-section">
+                        <div className="section-label">{t.playerColors}</div>
+                        <div className="player-setup">
+                            {players.map(player => (
+                                <div key={player.id} className="player-card">
+                                    <div className="player-info">
+                                        <div className="player-name">
+                                            {player.name} {player.isAI && t.ai}
+                                        </div>
+                                        <div className="color-picker">
+                                            {Object.entries(COLORS).map(([colorName, colorValue]) => {
+                                                const isTaken = players.some(p => p.id !== player.id && p.color === colorName);
+                                                return (
+                                                    <div
+                                                        key={colorName}
+                                                        className={`color-option ${player.color === colorName ? 'selected' : ''}`}
+                                                        style={{ 
+                                                            backgroundColor: colorValue,
+                                                            opacity: isTaken ? 0.3 : 1,
+                                                            cursor: isTaken ? 'not-allowed' : 'pointer'
+                                                        }}
+                                                        onClick={() => !isTaken && updatePlayerColor(player.id, colorName)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <button className="start-button" onClick={startGame}>
+                        {t.startGame}
+                    </button>
+                </div>
+            );
+
+            const renderBoard = () => {
+                const cellSize = Math.min(50, Math.floor((window.innerWidth - 100) / (gridSize.cols + 1)));
+                const dotRadius = 8;
+                const width = (gridSize.cols + 1) * cellSize;
+                const height = (gridSize.rows + 1) * cellSize;
+                
+                return (
+                    <svg className="board-svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+                        {/* Draw grid lines */}
+                        {Array.from({ length: gridSize.rows }).map((_, row) =>
+                            Array.from({ length: gridSize.cols }).map((_, col) => (
+                                <g key={`grid-${row}-${col}`}>
+                                    <rect
+                                        x={col * cellSize}
+                                        y={row * cellSize}
+                                        width={cellSize}
+                                        height={cellSize}
+                                        fill="none"
+                                        stroke="#E0E0E0"
+                                        strokeWidth="1"
+                                        strokeDasharray="3,3"
+                                    />
+                                </g>
+                            ))
+                        )}
+                        
+                        {/* Draw completed squares */}
+                        {squares.map((square, idx) => (
+                            <g key={`square-${idx}`} className="square-rect">
+                                <rect
+                                    x={square.col * cellSize}
+                                    y={square.row * cellSize}
+                                    width={cellSize}
+                                    height={cellSize}
+                                    fill={COLORS[square.color]}
+                                    opacity="0.5"
+                                    stroke={COLORS[square.color]}
+                                    strokeWidth="3"
+                                />
+                                <text
+                                    className="square-number"
+                                    x={square.col * cellSize + cellSize / 2}
+                                    y={square.row * cellSize + cellSize / 2}
+                                >
+                                    {square.number}
+                                </text>
+                            </g>
+                        ))}
+                        
+                        {/* Draw dots */}
+                        {Array.from({ length: gridSize.rows + 1 }).map((_, row) =>
+                            Array.from({ length: gridSize.cols + 1 }).map((_, col) => {
+                                const dotColor = getDotColor(row, col);
+                                const isPlaced = !!dotColor;
+                                
+                                return (
+                                    <g
+                                        key={`dot-${row}-${col}`}
+                                        className={isPlaced ? '' : 'dot-interactive'}
+                                        onClick={() => !isPlaced && handleDotClick(row, col)}
+                                    >
+                                        <circle
+                                            cx={col * cellSize}
+                                            cy={row * cellSize}
+                                            r={isPlaced ? dotRadius : dotRadius - 2}
+                                            fill={isPlaced ? COLORS[dotColor] : '#999'}
+                                            stroke={isPlaced ? '#fff' : 'none'}
+                                            strokeWidth={isPlaced ? 2 : 0}
+                                        />
+                                    </g>
+                                );
+                            })
+                        )}
+                    </svg>
+                );
+            };
+
+            const renderGame = () => {
+                const currentPlayer = players[currentPlayerIndex];
+                
+                return (
+                    <div className="game-screen">
+                        <div className="game-header">
+                            <div className="current-player">
+                                <div
+                                    className="player-indicator"
+                                    style={{ backgroundColor: COLORS[currentPlayer.color] }}
+                                />
+                                <span>{currentPlayer.name} {currentPlayer.isAI && t.ai}</span>
+                            </div>
+                            <div className="game-controls">
+                                <button className="control-button new-game" onClick={newGame}>
+                                    {t.newGame}
+                                </button>
+                                <button className="control-button forfeit" onClick={forfeit}>
+                                    {t.forfeit}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="game-content">
+                            <div className="board-container">
+                                <div className="game-board">
+                                    {renderBoard()}
+                                </div>
+                            </div>
+                            
+                            <div className="scoreboard">
+                                <div className="scoreboard-title">{t.scoreboard}</div>
+                                <div className="score-list">
+                                    {players.map((player, idx) => (
+                                        <div
+                                            key={player.id}
+                                            className={`score-item ${idx === currentPlayerIndex ? 'active' : ''}`}
+                                        >
+                                            <div className="score-player">
+                                                <div
+                                                    className="score-color"
+                                                    style={{ backgroundColor: COLORS[player.color] }}
+                                                />
+                                                <span className="score-name">
+                                                    {player.name}
+                                                    {player.isAI && ` ${t.ai}`}
+                                                </span>
+                                            </div>
+                                            <div className="score-value">{player.score}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderWinner = () => {
+                const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+                const winner = sortedPlayers[0];
+                const isDraw = sortedPlayers.filter(p => p.score === winner.score).length > 1;
+                
+                return (
+                    <div className="winner-screen">
+                        <div className="winner-content">
+                            <div className="winner-title">
+                                {isDraw ? t.draw : t.victory}
+                            </div>
+                            {!isDraw && (
+                                <div className="winner-name" style={{ color: COLORS[winner.color] }}>
+                                    {winner.name}
+                                </div>
+                            )}
+                            <div className="final-scores">
+                                {sortedPlayers.map(player => (
+                                    <div key={player.id} className="final-score-item">
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <div
+                                                style={{
+                                                    width: '16px',
+                                                    height: '16px',
+                                                    borderRadius: '50%',
+                                                    backgroundColor: COLORS[player.color]
+                                                }}
+                                            />
+                                            <span>{player.name}</span>
+                                        </div>
+                                        <strong>{player.score} {player.score > 1 ? t.squares : t.square}</strong>
+                                    </div>
+                                ))}
+                            </div>
+                            <button className="start-button" onClick={newGame}>
+                                {t.newGame}
+                            </button>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="app-container">
+                    <div className="language-toggle">
+                        <button 
+                            className={`lang-button ${language === 'fr' ? 'active' : ''}`}
+                            onClick={() => setLanguage('fr')}
+                        >
+                            FR
+                        </button>
+                        <button 
+                            className={`lang-button ${language === 'en' ? 'active' : ''}`}
+                            onClick={() => setLanguage('en')}
+                        >
+                            EN
+                        </button>
+                    </div>
+                    
+                    <div className="header">
+                        <h1 className="logo">{t.title}</h1>
+                        <p className="tagline">{t.tagline}</p>
+                    </div>
+                    
+                    {gameState === 'setup' && renderSetup()}
+                    {gameState === 'playing' && renderGame()}
+                    {gameState === 'finished' && renderWinner()}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<CarreGame />, document.getElementById('root'));
+    </script>
+</body>
+</html>
